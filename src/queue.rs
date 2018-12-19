@@ -1,6 +1,6 @@
 use std::cmp;
 use std::collections::BinaryHeap;
-use std::time::{Instant, Duration};
+use std::time::{Duration, Instant};
 
 #[derive(Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash)]
 pub enum Deadline {
