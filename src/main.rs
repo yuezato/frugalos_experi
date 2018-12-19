@@ -3,8 +3,9 @@ use mpsc_use::queue::{Deadline, DeadlineQueue};
 
 use fibers::sync::oneshot;
 use futures::{Future, Poll};
-use std::sync::mpsc::{Receiver, Sender};
+use std::sync::mpsc::{Receiver, RecvTimeoutError, Sender};
 use std::thread;
+use std::time::Duration;
 
 struct Command {
     value: u128,
@@ -55,6 +56,17 @@ fn main() {
             queue.push(com, Deadline::Infinity);
         } else if let Some(com) = queue.pop() {
             com.chan.send(Ok(com.value));
+        } else {
+            // このelse節が入るとかなり遅くなる
+            match command_rx.recv_timeout(Duration::from_millis(100)) {
+                Err(RecvTimeoutError::Disconnected) => {}
+                Err(RecvTimeoutError::Timeout) => {
+                    panic!();
+                }
+                Ok(com) => {
+                    queue.push(com, Deadline::Infinity);
+                }
+            }
         }
     });
 

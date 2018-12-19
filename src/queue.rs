@@ -20,6 +20,10 @@ pub struct DeadlineQueue<T> {
     heap: BinaryHeap<Item<T>>,
 }
 impl<T> DeadlineQueue<T> {
+    pub fn is_empty(&self) -> bool {
+        self.heap.is_empty()
+    }
+
     /// 新しい`DeadlineQueue`インスタンスを生成する.
     pub fn new() -> Self {
         DeadlineQueue {
